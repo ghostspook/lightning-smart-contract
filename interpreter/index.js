@@ -1,5 +1,8 @@
 const STOP = 'STOP';
 const ADD = 'ADD';
+const SUB = 'SUB';
+const MUL = 'MUL';
+const DIV = 'DIV';
 const PUSH = 'PUSH';
 
 class Interpreter {
@@ -27,10 +30,18 @@ class Interpreter {
             this.state.stack.push(value);
             break;
           case ADD:
+          case SUB:
+          case MUL:
+          case DIV:
             const a = this.state.stack.pop();
             const b = this.state.stack.pop();
 
-            this.state.stack.push(a+b);
+            let result = (opCode === ADD) ? a + b :
+                         (opCode === SUB) ? a - b :
+                         (opCode === MUL) ? a * b :
+                         (opCode === DIV) ? a / b : null
+
+            this.state.stack.push(result);
             break;
           default:
             break;
@@ -44,6 +55,18 @@ class Interpreter {
   }
 }
 
-const code = [PUSH, 2, PUSH, 3, ADD, STOP];
-const interpreter = new Interpreter();
-interpreter.runCode(code);
+let code = [PUSH, 2, PUSH, 3, ADD, STOP];
+let result = new Interpreter().runCode(code);
+console.log(result);
+
+code = [PUSH, 15, PUSH, 7, SUB, STOP];
+result = new Interpreter().runCode(code);
+console.log(result);
+
+code = [PUSH, 8, PUSH, 4, MUL, STOP];
+result = new Interpreter().runCode(code);
+console.log(result);
+
+code = [PUSH, 80, PUSH, 4, DIV, STOP];
+result = new Interpreter().runCode(code);
+console.log(result);
